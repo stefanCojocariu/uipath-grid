@@ -1,0 +1,28 @@
+<div class="progress-circle-wrapper">
+	<div class="progress-circle">
+		<svg [attr.width]="circleCenter() * 2"
+			[attr.height]="circleCenter() * 2"
+			class="progress-circle__svg">
+			<circle [attr.r]="radius()"
+				[attr.cx]="circleCenter()"
+				[attr.cy]="circleCenter()"
+				[attr.stroke-width]="strokeWidth"
+				class="progress-circle__track"
+				stroke="#CDD6E0"
+				fill="none"></circle>
+			<circle [attr.r]="radius()"
+				[attr.cx]="circleCenter()"
+				[attr.cy]="circleCenter()"
+				[attr.stroke-width]="strokeWidth"
+				[attr.stroke-dasharray]="circumference()"
+				[attr.stroke-dashoffset]="progressOffset()"
+				[attr.stroke]="color()"
+				class="progress-circle__indicator"
+				fill="none"></circle>
+		</svg>
+		<div class="progress-circle__center">
+			<hourglass [size]="35"></hourglass>
+			<span class="progress-circle__text">{{progress()}}%</span>
+		</div>
+	</div>
+</div>
