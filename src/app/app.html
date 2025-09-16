@@ -1,8 +1,20 @@
-@if(progress() != 100) {
-	<t-progress [radius]="50"
-		[progress]="progress()"
-		color="#1567CB"></t-progress>
-}
+<div class="card-list">
+	<div class="card">
+		<div class="card__user">
+			<img class="card__avatar" alt="Profile" src="me.jpeg">
+			<div class="card__user-details">
+			<span class="card__username">Stefan Cojocariu</span>
+			<span class="card__position">Frontend Engineer</span>
+			</div>
+		</div>
 
-<span>Hello, UiPath</span>
-
+		<div class="card__description">
+			<p>Hello, UiPath.</p> 
+			<p>That was the progress indicator and this is the grid, with data coming from chess.com public API.</p>
+			<p>It's displaying all my games from September. You can double click on any game and it will redirect to that chess game reviw.</p>
+			<p>All other features requested are there as well.</p>
+		</div>
+		
+		<chess-grid-component/>
+	</div>
+</div>

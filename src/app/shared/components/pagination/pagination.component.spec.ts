@@ -1,18 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pagination } from './pagination.component';
 
-import { TProgress } from './t-progress';
-
-describe('TProgress', () => {
-  let component: TProgress;
-  let fixture: ComponentFixture<TProgress>;
+describe('Pagination', () => {
+  let component: Pagination;
+  let fixture: ComponentFixture<Pagination>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TProgress]
-    })
-    .compileComponents();
+      imports: [Pagination],
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(TProgress);
+    fixture = TestBed.createComponent(Pagination);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

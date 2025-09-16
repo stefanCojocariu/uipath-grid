@@ -14,15 +14,15 @@
 				[attr.cx]="circleCenter()"
 				[attr.cy]="circleCenter()"
 				[attr.stroke-width]="strokeWidth"
-				[attr.stroke-dasharray]="circumference()"
+				[attr.stroke-dasharray]="circleLength()"
 				[attr.stroke-dashoffset]="progressOffset()"
 				[attr.stroke]="color()"
 				class="progress-circle__indicator"
 				fill="none"></circle>
 		</svg>
 		<div class="progress-circle__center">
-			<hourglass [size]="35"></hourglass>
-			<span class="progress-circle__text">{{progress()}}%</span>
+			<hourglass [size]="50"></hourglass>
+			<span class="progress-circle__text">{{progressText()}}%</span>
 		</div>
 	</div>
 </div>

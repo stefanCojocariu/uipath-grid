@@ -1,0 +1,20 @@
+<div class="pagination">
+    @let current = currentPage();
+    @let total = totalPages();
+    @let isPrevDisabled = current == 0;
+    @let isNextDisabled = current + 1 == total;
+
+    <div class="pagination__info">
+        <span>Page {{current + 1}} of {{total}} |</span>
+        <span>Total results: {{totalRows()}}</span>
+    </div>
+
+    <button class="pagination__button" [disabled]="isPrevDisabled || disabled()" [class.disabled]="isPrevDisabled" (click)="onChangePage(-1)">Prev</button>
+    <button class="pagination__button" [disabled]="isNextDisabled || disabled()" [class.disabled]="isNextDisabled" (click)="onChangePage(1)">Next</button>
+
+    <select [class.cursor-default]="disabled()" [disabled]="disabled()" (change)="onPageSizeChange($event)">
+        @for(option of pageSizeOptions(); track $index) {
+            <option [value]="option.value" [selected]="option.value === pageSize()">{{option.name}}</option>
+        }
+    </select>
+</div>

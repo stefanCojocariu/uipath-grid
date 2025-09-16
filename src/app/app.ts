@@ -1,12 +1,13 @@
-import { Component, signal } from '@angular/core';
-import { TProgress } from './shared/components/t-progress/t-progress';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChessGridComponent } from './chess/components/chess-grid/chess-grid.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrl: './app.scss',
   standalone: true,
-  imports: [TProgress],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ChessGridComponent],
 })
 export class App {
   public progress = signal<number>(0);

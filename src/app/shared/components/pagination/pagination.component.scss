@@ -1,0 +1,44 @@
+@mixin button() {
+    padding: 5px 15px;
+    background-color: transparent;
+    border: 1px solid lightgrey;
+    color: #333;
+    border-radius: 10px;
+    user-select: none;
+    cursor: pointer;
+}
+
+$gap: 10px;
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: $gap;
+
+    &__info {
+        display: flex;
+        gap: $gap;
+    }
+
+    &__button,
+    select {
+        @include button();
+    }
+
+    button {
+        &:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    }
+
+    select {
+        &:focus {
+            outline: 0;
+        }
+
+        option {
+            @include button();
+        }
+    }
+}

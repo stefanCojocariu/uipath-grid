@@ -1,4 +1,61 @@
 :host {
+    display: block;
     width: 100%;
     height: 100%;
+
+    .card-list {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        border: 1px solid lightgrey;
+        border-radius: 30px;
+        padding: 30px;
+        width: 100%;
+        max-width: 1350px;
+
+        p {
+            color: #333;
+        }
+
+        &__user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        &__description {
+            display: block;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        &__user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        &__avatar {
+            border-radius: 50%;
+            height: 70px;
+        }
+
+        &__username {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        &__position {
+            font-size: 0.8rem;
+            color: #333;
+        }
+    }
 }

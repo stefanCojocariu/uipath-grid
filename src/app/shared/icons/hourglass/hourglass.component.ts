@@ -2,7 +2,7 @@ import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'hourglass',
-  templateUrl: './hourglass.html',
+  templateUrl: './hourglass.component.html',
   standalone: true,
 })
 export class Hourglass {

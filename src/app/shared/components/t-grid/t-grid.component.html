@@ -1,0 +1,57 @@
+@let rows = viewRows();
+@let hasNoData = rows.length === 0;
+
+@if(columns().length) {
+    @let viewColumns = columns();
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    @for (column of viewColumns; track $index) {
+                        @let sortDirection = column.sortDirection();
+                        @let sortable = column.sortable();
+
+                        <th [ngClass]="{'cursor-pointer': sortable, 'disabled': hasNoData}" (click)="!hasNoData ? onSortChange(column) : null">
+                            <span>{{column.name()}}</span>
+                            @if(sortable) {
+                                <span class="table-wrapper__sort-icon">
+                                    @if (sortDirection === Direction.ASC) {▲}
+                                    @else if(sortDirection === Direction.DESC) {▼}
+                                    @else {•}
+                                </span>
+                            }
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody [class.table-wrapper__no-data]="hasNoData">
+                @if (hasNoData) {
+                    <t-progress [radius]="80"
+                        [progress]="progress()"
+                        [color]="'#1567CB'"></t-progress>
+                } @else {
+                    @for (row of rows; track $index) {
+                        <tr>
+                            @for (column of viewColumns; track $index) {
+                                @let cellText = row[column.property()];
+                                <td>
+                                    <span>{{cellText}}</span>
+                                </td>
+                            }
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <pagination 
+        [disabled]="hasNoData"
+        [currentPage]="currentPage()" 
+        [pageSize]="currentPageSize()" 
+        [pageSizeOptions]="pageSizeOptions"
+        [totalPages]="totalPages()"
+        [totalRows]="totalRows()"
+        (changePage)="onChangePage($event)"
+        (pageSizeChange)="onPageSizeChange($event)"/>
+}
