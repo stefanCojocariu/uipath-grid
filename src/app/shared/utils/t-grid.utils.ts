@@ -1,6 +1,7 @@
 import { TColumnComponent } from '../components/t-column/t-column.component';
 import { ColumnDef } from '../models/column-def.model';
 import { Direction } from '../enums/direction.enum';
+import { Injectable } from '@angular/core';
 
 export class TGridUtils {
   public static getSortedRows<T>(rows: T[], sortedColumn: ColumnDef<T>): T[] {
@@ -28,10 +29,13 @@ export class TGridUtils {
   }
 
   public static getPaginatedRows<T>(rows: T[], pageSize: number | null, currentPage: number): T[] {
-    const currentPageSize = pageSize ?? rows.length;
-    const start = currentPage * currentPageSize;
+    if (!pageSize) {
+      return rows;
+    }
 
-    return rows.slice(start, start + currentPageSize);
+    const start = currentPage * pageSize;
+
+    return rows.slice(start, start + pageSize);
   }
 
   public static mapTColumnComponentsToColumnDef<T>(

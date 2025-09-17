@@ -41,19 +41,18 @@ export class TGridComponent<T> {
 
   public data = input.required<T[] | Observable<T[]>>();
   public sortable = input.required<boolean>();
-  public pageSize = input<number | null>();
+  public pageSize = input<number | null>(null);
   public sortChange = output<SortChange>();
   public paginationChange = output<PaginationChange>();
 
   readonly #rows = signal<T[]>([]);
   readonly #pageSize = signal<number | null>(null);
-  readonly #currentPage = signal(0);
-  readonly #shouldSort = signal(false);
-  readonly #shouldPaginate = signal(false);
+  readonly #currentPage = signal<number>(0);
   readonly #currentSort = signal<SortChange | null>(null);
   readonly #progress = signal(0);
   private readonly requestDelay = 3000;
 
+  // UI
   public readonly viewRows = computed(() => {
     const rows = this.#rows();
 
@@ -80,6 +79,7 @@ export class TGridComponent<T> {
   public readonly progress = this.#progress.asReadonly();
   public readonly pageSizeOptions = getPageSizeOptions();
   public readonly Direction = Direction;
+  // UI
 
   constructor() {
     effect(() => this.syncData());
@@ -98,22 +98,13 @@ export class TGridComponent<T> {
 
   public onChangePage(value: number): void {
     this.#currentPage.set(value);
-    this.#shouldPaginate.set(true);
     this.emitPaginationChange();
   }
 
   public onPageSizeChange(value: number | null): void {
     this.#pageSize.set(value);
     this.#currentPage.set(0);
-    this.#shouldPaginate.set(true);
     this.emitPaginationChange();
-  }
-
-  public emitPaginationChange(): void {
-    this.paginationChange.emit({
-      pageSize: this.#pageSize(),
-      currentPage: this.#currentPage(),
-    });
   }
 
   public onSortChange(selectedColumn: TColumnComponent<T>): void {
@@ -127,7 +118,6 @@ export class TGridComponent<T> {
     };
     this.#currentSort.set(currentSort);
     this.#currentPage.set(0);
-    this.#shouldSort.set(true);
     this.sortChange.emit(currentSort);
   }
 
@@ -135,7 +125,7 @@ export class TGridComponent<T> {
     let processedRows = [...rows];
 
     const currentSort = this.#currentSort();
-    if (this.#shouldSort() && currentSort) {
+    if (currentSort) {
       const sortedColumn = this.columns().find((column) => column.name() == currentSort.columnName);
       if (!sortedColumn) {
         return processedRows;
@@ -144,13 +134,11 @@ export class TGridComponent<T> {
       processedRows = TGridUtils.getSortedRows<T>(processedRows, columnDef);
     }
 
-    if (this.#shouldPaginate()) {
-      processedRows = TGridUtils.getPaginatedRows<T>(
-        processedRows,
-        this.#pageSize(),
-        this.#currentPage()
-      );
-    }
+    processedRows = TGridUtils.getPaginatedRows<T>(
+      processedRows,
+      this.#pageSize(),
+      this.#currentPage()
+    );
 
     return processedRows;
   }
@@ -159,15 +147,13 @@ export class TGridComponent<T> {
     const rows = this.data();
 
     if (isObservable(rows)) {
-      timer(this.requestDelay)
+      rows
         .pipe(
-          switchMap(() => rows),
           catchError((err) => {
             console.log('Failed to get data', err);
 
             return of([] as T[]);
           }),
-          finalize(() => this.#progress.set(100)),
           takeUntilDestroyed(this.#destroyRef)
         )
         .subscribe((rows) => this.#rows.set(rows));
@@ -183,6 +169,13 @@ export class TGridComponent<T> {
 
     this.#pageSize.set(selectedValue);
     this.#currentPage.set(0);
+  }
+
+  private emitPaginationChange(): void {
+    this.paginationChange.emit({
+      pageSize: this.#pageSize(),
+      currentPage: this.#currentPage(),
+    });
   }
 
   private startProgress(): void {

@@ -1,6 +1,6 @@
 <t-grid [data]="chessGridData$"
     [sortable]="true"
-    [pageSize]="200"
+    [pageSize]="20"
     (sortChange)="onSortChange($event)"
     (paginationChange)="onPaginationChange($event)">
     @for(column of columns(); track $index) {

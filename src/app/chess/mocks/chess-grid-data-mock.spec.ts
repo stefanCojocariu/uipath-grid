@@ -1,0 +1,58 @@
+import { ChessGridData } from '../models/chess-grid-data.model';
+
+export const chessGridDataMock: () => ChessGridData[] = () => [
+  {
+    id: '1',
+    date: '01/11/2024',
+    type: 'rapid',
+    opponent: 'op1',
+    rating: 951,
+    result: 'WIN🏆',
+    playedAsWhite: 'NO ⚫',
+  },
+  {
+    id: '4',
+    date: '01/11/2024',
+    type: 'rapid',
+    opponent: 'op4',
+    rating: 800,
+    result: 'WIN🏆',
+    playedAsWhite: 'NO ⚫',
+  },
+  {
+    id: '2',
+    date: '01/11/2024',
+    type: 'rapid',
+    opponent: 'op2',
+    rating: 700,
+    result: 'WIN🏆',
+    playedAsWhite: 'NO ⚫',
+  },
+  {
+    id: '3',
+    date: '01/11/2024',
+    type: 'rapid',
+    opponent: 'op3',
+    rating: 600,
+    result: 'WIN🏆',
+    playedAsWhite: 'NO ⚫',
+  },
+  {
+    id: '5',
+    date: '01/11/2024',
+    type: 'rapid',
+    opponent: 'op3',
+    rating: 600,
+    result: 'WIN🏆',
+    playedAsWhite: 'NO ⚫',
+  },
+  {
+    id: '6',
+    date: '01/11/2024',
+    type: 'rapid',
+    opponent: 'op3',
+    rating: 600,
+    result: 'WIN🏆',
+    playedAsWhite: 'NO ⚫',
+  },
+];

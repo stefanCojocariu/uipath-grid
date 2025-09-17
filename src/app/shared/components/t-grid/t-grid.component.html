@@ -1,5 +1,5 @@
 @let rows = viewRows();
-@let hasNoData = rows.length === 0;
+@let hasNoData = progress() != 100;
 
 @if(columns().length) {
     @let viewColumns = columns();

@@ -1,10 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
+import { MockComponent } from 'ng-mocks';
+import { ChessGridComponent } from './chess/components/chess-grid/chess-grid.component';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [App],
+      imports: [App, MockComponent(ChessGridComponent)],
     }).compileComponents();
   });
 

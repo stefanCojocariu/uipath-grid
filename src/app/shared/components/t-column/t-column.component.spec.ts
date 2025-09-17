@@ -1,19 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TColumnComponent } from './t-column.component';
+import { ChessGridData } from '../../../chess/models/chess-grid-data.model';
 
-import { TColumn } from './t-column.component';
-
-describe('TColumn', () => {
-  let component: TColumn;
-  let fixture: ComponentFixture<TColumn>;
+describe('TColumnComponent', () => {
+  let component: TColumnComponent<ChessGridData>;
+  let fixture: ComponentFixture<TColumnComponent<ChessGridData>>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TColumn],
+      imports: [TColumnComponent<ChessGridData>],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(TColumn);
+    fixture = TestBed.createComponent(TColumnComponent<ChessGridData>);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
