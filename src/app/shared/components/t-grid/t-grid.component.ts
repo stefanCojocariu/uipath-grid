@@ -50,7 +50,7 @@ export class TGridComponent<T> {
   readonly #currentPage = signal<number>(0);
   readonly #currentSort = signal<SortChange | null>(null);
   readonly #progress = signal(0);
-  private readonly requestDelay = 3000;
+  private readonly requestDelay = 7000;
 
   // UI
   public readonly viewRows = computed(() => {
