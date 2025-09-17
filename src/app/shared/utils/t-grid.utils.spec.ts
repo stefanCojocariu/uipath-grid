@@ -22,13 +22,18 @@ describe('TGridUtils', () => {
   });
 
   describe('getSortedRows', () => {
-    const rows: ChessGridData[] = chessGridDataMock().slice(0, 4);
-    const sortedColumn: ColumnDef<ChessGridData> = {
-      name: 'Op',
-      property: 'opponent',
-      sortable: true,
-      sortDirection: Direction.NONE,
-    };
+    let rows: ChessGridData[];
+    let sortedColumn: ColumnDef<ChessGridData>;
+
+    beforeEach(() => {
+      rows = chessGridDataMock().slice(0, 4);
+      sortedColumn = {
+        name: 'Op',
+        property: 'opponent',
+        sortable: true,
+        sortDirection: Direction.NONE,
+      };
+    });
 
     it('should return initial array if direction is none', () => {
       expect(TGridUtils.getSortedRows(rows, sortedColumn)).toEqual(rows);

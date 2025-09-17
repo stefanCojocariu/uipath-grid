@@ -7,11 +7,12 @@ import { Direction } from '../../../shared/enums/direction.enum';
 import { ChessGridData } from '../../models/chess-grid-data.model';
 import { SortChange } from '../../../shared/models/sort-change.model';
 import { PaginationChange } from '../../../shared/models/pagination-change.model';
+import { ChessService } from '../../../api/chess/services/chess.service';
 
 @Component({
   selector: 'chess-grid-component',
   imports: [TGridComponent, TColumnComponent],
-  providers: [ChessGridService],
+  providers: [ChessGridService, ChessService],
   templateUrl: './chess-grid.component.html',
   styleUrl: './chess-grid.component.scss',
   standalone: true,
