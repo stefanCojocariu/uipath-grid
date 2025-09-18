@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { TColumnComponent } from '../../../shared/components/t-column/t-column.component';
 import { TGridComponent } from '../../../shared/components/t-grid/t-grid.component';
 import { ChessGridService } from '../../services/chess-grid.service';
@@ -63,13 +63,11 @@ export class ChessGridComponent {
 
   public readonly columns = this.#columns.asReadonly();
 
+  public columnTrackBy<T>(index: number, column: ColumnDef<ChessGridData>): string {
+    return (column.property as string) ?? index.toString();
+  }
+
   public onSortChange(sortChange: SortChange): void {
-    this.#columns.update((columns) =>
-      columns.map((column) => ({
-        ...column,
-        sortDirection: column.name == sortChange.columnName ? sortChange.direction : Direction.NONE,
-      }))
-    );
     console.log('[UIPATH] Parent sort change:', sortChange);
   }
 

@@ -1,19 +1,18 @@
 @let rows = viewRows();
+@let viewColumns = columns();
 @let hasNoData = progress() != 100;
 
-@if(columns().length) {
-    @let viewColumns = columns();
-
+@if(viewColumns.length) {
     <div class="table-wrapper">
         <table>
             <thead>
                 <tr>
                     @for (column of viewColumns; track columnTrackBy($index, column)) {
-                        @let sortDirection = column.sortDirection();
-                        @let sortable = column.sortable();
+                        @let sortDirection = column.sortDirection;
+                        @let sortable = column.sortable;
 
                         <th [ngClass]="{'cursor-pointer': sortable, 'disabled': hasNoData}" (click)="!hasNoData ? onSortChange(column) : null">
-                            <span>{{column.name()}}</span>
+                            <span>{{column.name}}</span>
                             @if(sortable) {
                                 <span class="table-wrapper__sort-icon">
                                     @if (sortDirection === Direction.ASC) {▲}
@@ -34,7 +33,7 @@
                     @for (row of rows; track rowTrackBy($index, row)) {
                         <tr>
                             @for (column of viewColumns; track columnTrackBy($index, column)) {
-                                @let cellText = row[column.property()];
+                                @let cellText = row[column.property];
                                 <td>
                                     <span>{{cellText}}</span>
                                 </td>
