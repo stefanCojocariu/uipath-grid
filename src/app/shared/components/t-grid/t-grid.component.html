@@ -8,7 +8,7 @@
         <table>
             <thead>
                 <tr>
-                    @for (column of viewColumns; track $index) {
+                    @for (column of viewColumns; track columnTrackBy($index, column)) {
                         @let sortDirection = column.sortDirection();
                         @let sortable = column.sortable();
 
@@ -31,9 +31,9 @@
                         [progress]="progress()"
                         [color]="'#1567CB'"></t-progress>
                 } @else {
-                    @for (row of rows; track $index) {
+                    @for (row of rows; track rowTrackBy($index, row)) {
                         <tr>
-                            @for (column of viewColumns; track $index) {
+                            @for (column of viewColumns; track columnTrackBy($index, column)) {
                                 @let cellText = row[column.property()];
                                 <td>
                                     <span>{{cellText}}</span>

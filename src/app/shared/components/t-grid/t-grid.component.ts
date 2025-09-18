@@ -50,7 +50,7 @@ export class TGridComponent<T> {
   readonly #currentPage = signal<number>(0);
   readonly #currentSort = signal<SortChange | null>(null);
   readonly #progress = signal(0);
-  private readonly requestDelay = 7000;
+  private readonly requestDelay = 3000;
 
   // UI
   public readonly viewRows = computed(() => {
@@ -118,7 +118,7 @@ export class TGridComponent<T> {
     };
     this.#currentSort.set(currentSort);
     this.#currentPage.set(0);
-    this.sortChange.emit(currentSort);
+    this.sortChange.emit({ ...currentSort });
   }
 
   private getViewRows(rows: T[]): T[] {
@@ -174,7 +174,7 @@ export class TGridComponent<T> {
   private emitPaginationChange(): void {
     this.paginationChange.emit({
       pageSize: this.#pageSize(),
-      currentPage: this.#currentPage(),
+      currentPage: this.#currentPage() + 1,
     });
   }
 

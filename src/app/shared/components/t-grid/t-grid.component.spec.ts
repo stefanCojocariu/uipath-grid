@@ -129,10 +129,12 @@ describe('TGridComponent', () => {
       expect(component.currentPage())
         .withContext('should set current page to value')
         .toBe(currentPage);
-      expect(spy).withContext('should emit pagiation change').toHaveBeenCalledOnceWith({
-        pageSize,
-        currentPage,
-      });
+      expect(spy)
+        .withContext('should emit pagiation change')
+        .toHaveBeenCalledOnceWith({
+          pageSize,
+          currentPage: currentPage + 1,
+        });
     });
   });
 
@@ -148,7 +150,7 @@ describe('TGridComponent', () => {
       expect(component.currentPageSize()).toBe(pageSize);
       expect(spy).withContext('should emit pagiation change').toHaveBeenCalledOnceWith({
         pageSize,
-        currentPage: 0,
+        currentPage: 1,
       });
     });
   });

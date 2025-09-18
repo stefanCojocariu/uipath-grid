@@ -1,59 +1,36 @@
-# UipathGrid
+Componenta t-grid --------
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.1.
+- Intreaga logica a componentei este gestionata prin readonly #signals. Expunerea lor catre UI se face prin signals derivate asReadonly() sau computed(). Am folosit acest pattern pentru a evita orice modificarea venita din exterior asupra sursei signal-ului, SSOT, change detection nativ si performanta.
 
-## Development server
+- Logica pentru paginare si sortare a fost pusa intr-un utils class cu metode statice pure. Pentru o mai buna testare si mentenanta a codului. Clasa nu este injectable pentru ca este stateless.
 
-To start a local development server, run:
+- Logica de sortare este inaintea paginarii pentru a mentine consistenta UX.
 
-```bash
-ng serve
-```
+- Am folosit content children signal pentru a lua coloanele din template-ul parinte. Am ales sa folosesc signal-ul pentru ca simplica reactivitatea la schimbarea de coloane.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Metodele syncData, syncPageSize sunt apelate ori de cate ori input-urile data si pageSize se schimba. Am ales effect() pentru ca simplifica reactivitatea la schimbarea de input-uri.
 
-## Code scaffolding
+- Metodele onChangePage, onPageSizeChange, onSortChange sunt user interactions ce modifica signal-urile interne si signal-urile de UI se recalculeaza.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- onSortChange emite catre parinte noul sortChange si il seteaza in #currentSort signal pentru a se recalcula viewRows. Parintele primeste emisia si updateaza coloana sortata + reset la restul cu sort none.
 
-```bash
-ng generate component component-name
-```
+Metode
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- syncData --> se recalculeaza viewRows, totalPages, totalRows UI signals
+- syncPageSize --> se recalculeaza viewRows, totalPages UI signal
+- onChangePage --> se recalculeaza viewRows UI signal
+- onPageSizeChange --> se recalculeaza viewRows, totalPages UI signals
+- onSortChange called --> se recalculeaza viewRows UI signal
 
-```bash
-ng generate --help
-```
+Componenta pagination --------
 
-## Building
+- Este o componenta aproape dumb, primeste date si emite catre parinte:
 
-To build the project run:
+Methode
 
-```bash
-ng build
-```
+- onChangePage(click Prev, Next): verifica daca nextPage-ul este valid si il emite catre parinte, in caz contrar nu face nimic
+- onPageSizeChange(select option): parseaza valoarea option-ului si o emite catre parinte
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Componenta t-column --------
 
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- Este un dumb component ce depinde de parinte, ea doar descrie coloana
