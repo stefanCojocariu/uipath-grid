@@ -1,5 +1,7 @@
 import {
   AfterContentInit,
+  afterNextRender,
+  afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -8,12 +10,22 @@ import {
   DestroyRef,
   effect,
   inject,
+  Injector,
   input,
   output,
   QueryList,
   signal,
 } from '@angular/core';
-import { catchError, finalize, isObservable, Observable, of, switchMap, timer } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  finalize,
+  isObservable,
+  Observable,
+  of,
+  switchMap,
+  timer,
+} from 'rxjs';
 import { SortChange } from '../../models/sort-change.model';
 import { PaginationChange } from '../../models/pagination-change.model';
 import { TColumnComponent } from '../t-column/t-column.component';
@@ -25,6 +37,7 @@ import { TProgressComponent } from '../t-progress/t-progress.component';
 import { getPageSizeOptions } from '../../consts/page-size-options';
 import { CommonModule } from '@angular/common';
 import { PaginationComponent } from '../pagination/pagination.component';
+import { ColumnDef } from '../../models/column-def.model';
 
 @Component({
   selector: 't-grid',
@@ -35,7 +48,7 @@ import { PaginationComponent } from '../pagination/pagination.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TGridComponent<T> {
-  public columns = contentChildren(TColumnComponent, { read: TColumnComponent<T> });
+  public columnComponents = contentChildren<TColumnComponent<T>>(TColumnComponent);
 
   readonly #destroyRef = inject(DestroyRef);
 
@@ -46,9 +59,10 @@ export class TGridComponent<T> {
   public paginationChange = output<PaginationChange>();
 
   readonly #rows = signal<T[]>([]);
+  readonly #columns = signal<ColumnDef<T>[]>([]);
   readonly #pageSize = signal<number | null>(null);
   readonly #currentPage = signal<number>(0);
-  readonly #currentSort = signal<SortChange | null>(null);
+  readonly #sortedColumn = signal<ColumnDef<T> | null>(null);
   readonly #progress = signal(0);
   private readonly requestDelay = 3000;
 
@@ -73,6 +87,7 @@ export class TGridComponent<T> {
 
     return Math.ceil(this.#rows().length / pageSize);
   });
+  public readonly columns = this.#columns.asReadonly();
   public readonly currentPage = this.#currentPage.asReadonly();
   public readonly currentPageSize = this.#pageSize.asReadonly();
 
@@ -84,12 +99,13 @@ export class TGridComponent<T> {
   constructor() {
     effect(() => this.syncData());
     effect(() => this.syncPageSize());
+    afterRenderEffect(() => this.syncColumns());
 
     this.startProgress();
   }
 
-  public columnTrackBy(index: number, column: TColumnComponent<T>): string {
-    return (column.property() as string) ?? index.toString();
+  public columnTrackBy(index: number, column: ColumnDef<T>): string {
+    return (column.property as string) ?? index.toString();
   }
 
   public rowTrackBy(index: number, row: T): string {
@@ -107,31 +123,39 @@ export class TGridComponent<T> {
     this.emitPaginationChange();
   }
 
-  public onSortChange(selectedColumn: TColumnComponent<T>): void {
-    if (!this.sortable() || !selectedColumn.sortable()) {
+  public onSortChange(selectedColumn: ColumnDef<T>): void {
+    if (!this.sortable() || !selectedColumn.sortable) {
       return;
     }
 
-    const currentSort: SortChange = {
-      columnName: selectedColumn.name(),
-      direction: TGridUtils.getNextSortDirection(selectedColumn.sortDirection()),
+    const selectedColumnWithNextDirection: ColumnDef<T> = {
+      ...selectedColumn,
+      sortDirection: TGridUtils.getNextSortDirection(selectedColumn.sortDirection),
     };
-    this.#currentSort.set(currentSort);
+
+    this.#sortedColumn.set(selectedColumnWithNextDirection);
     this.#currentPage.set(0);
-    this.sortChange.emit({ ...currentSort });
+    this.#columns.update((columns) =>
+      columns.map((column) => ({
+        ...column,
+        sortDirection:
+          column.name == selectedColumnWithNextDirection.name
+            ? selectedColumnWithNextDirection.sortDirection
+            : Direction.NONE,
+      }))
+    );
+    this.sortChange.emit({
+      columnName: selectedColumn.name,
+      direction: selectedColumnWithNextDirection.sortDirection,
+    });
   }
 
   private getViewRows(rows: T[]): T[] {
     let processedRows = [...rows];
 
-    const currentSort = this.#currentSort();
-    if (currentSort) {
-      const sortedColumn = this.columns().find((column) => column.name() == currentSort.columnName);
-      if (!sortedColumn) {
-        return processedRows;
-      }
-      const [columnDef] = TGridUtils.mapTColumnComponentsToColumnDef<T>(sortedColumn);
-      processedRows = TGridUtils.getSortedRows<T>(processedRows, columnDef);
+    const sortedColumn = this.#sortedColumn();
+    if (sortedColumn) {
+      processedRows = TGridUtils.getSortedRows<T>(processedRows, sortedColumn);
     }
 
     processedRows = TGridUtils.getPaginatedRows<T>(
@@ -160,6 +184,11 @@ export class TGridComponent<T> {
     } else {
       this.#rows.set(rows as T[]);
     }
+  }
+
+  private syncColumns(): void {
+    const columnDefs = TGridUtils.mapTColumnComponentsToColumnDef([...this.columnComponents()]);
+    this.#columns.set(columnDefs);
   }
 
   private syncPageSize(): void {

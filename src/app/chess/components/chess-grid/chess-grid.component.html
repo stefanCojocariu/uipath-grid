@@ -3,7 +3,7 @@
     [pageSize]="20"
     (sortChange)="onSortChange($event)"
     (paginationChange)="onPaginationChange($event)">
-    @for(column of columns(); track $index) {
+    @for(column of columns(); track columnTrackBy($index, column)) {
         <t-column [sortable]="column.sortable"
         [name]="column.name"
         [property]="column.property"

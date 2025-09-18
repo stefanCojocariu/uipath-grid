@@ -158,12 +158,12 @@ describe('TGridComponent', () => {
   describe('onSortChange', () => {
     it('should set current to 0 and emit sort change', () => {
       const spy = spyOn(component.sortChange, 'emit');
-      const column = {
-        name: signal('Rating'),
-        property: signal('rating'),
-        sortable: signal(true),
-        sortDirection: signal(Direction.NONE),
-      } as any as TColumnComponent<ChessGridData>;
+      const column: ColumnDef<ChessGridData> = {
+        name: 'Rating',
+        property: 'rating',
+        sortable: true,
+        sortDirection: Direction.NONE,
+      };
       spyOn(TGridUtils, 'getNextSortDirection').and.returnValue(Direction.NONE);
       component.onSortChange(column);
 
@@ -176,12 +176,12 @@ describe('TGridComponent', () => {
 
     it('should not emit sort change if column is not sortable', () => {
       const spy = spyOn(component.sortChange, 'emit');
-      const column = {
-        name: signal('Rating'),
-        property: signal('rating'),
-        sortable: signal(false),
-        sortDirection: signal(Direction.NONE),
-      } as any as TColumnComponent<ChessGridData>;
+      const column: ColumnDef<ChessGridData> = {
+        name: 'Rating',
+        property: 'rating',
+        sortable: false,
+        sortDirection: Direction.NONE,
+      };
       component.onSortChange(column);
 
       expect(spy).not.toHaveBeenCalled();
@@ -189,12 +189,12 @@ describe('TGridComponent', () => {
 
     it('should not emit sort change if table is not sortable', () => {
       const spy = spyOn(component.sortChange, 'emit');
-      const column = {
-        name: signal('Rating'),
-        property: signal('rating'),
-        sortable: signal(true),
-        sortDirection: signal(Direction.NONE),
-      } as any as TColumnComponent<ChessGridData>;
+      const column: ColumnDef<ChessGridData> = {
+        name: 'Rating',
+        property: 'rating',
+        sortable: true,
+        sortDirection: Direction.NONE,
+      };
       componentRef.setInput('sortable', false);
       fixture.detectChanges();
       component.onSortChange(column);
@@ -205,7 +205,7 @@ describe('TGridComponent', () => {
 
   describe('viewRows', () => {
     beforeEach(() => {
-      component.columns = signal([
+      component.columnComponents = signal([
         {
           name: signal('Rating'),
           property: signal('rating'),
@@ -221,12 +221,12 @@ describe('TGridComponent', () => {
       const paginateSpy = spyOn(TGridUtils, 'getPaginatedRows')
         .withArgs(expected, 10, 0)
         .and.returnValue(expected);
-      const column = {
-        name: signal('Rating'),
-        property: signal('rating'),
-        sortable: signal(true),
-        sortDirection: signal(Direction.NONE),
-      } as any as TColumnComponent<ChessGridData>;
+      const column: ColumnDef<ChessGridData> = {
+        name: 'Rating',
+        property: 'rating',
+        sortable: true,
+        sortDirection: Direction.NONE,
+      };
       spyOn(TGridUtils, 'mapTColumnComponentsToColumnDef').and.returnValue([
         {
           name: 'Rating',
